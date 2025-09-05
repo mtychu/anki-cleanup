@@ -39,11 +39,3 @@ def invoke(action, **params):
         return None
 
     return result.get("result")
-
-
-# Test
-decks = invoke("deckNames")
-if decks:
-    print("Decks in Anki:")
-    for deck in decks:
-        print("-", deck)

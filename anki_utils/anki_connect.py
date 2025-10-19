@@ -1,5 +1,7 @@
 import requests
 
+
+# Define Global Variables for Anki
 ANKI_CONNECT_URL = "http://localhost:8765"
 
 
@@ -29,7 +31,7 @@ def invoke(action, **params):
     # If no errors from AnkiConnect, parse response
     try:
         result = response.json()
-        print(result)
+        # print(result)
     except ValueError:
         print("ERROR: couldn't parse response object from AnkiConnect.")
         return None

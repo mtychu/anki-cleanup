@@ -79,3 +79,9 @@ def card_info(card_id, deck_name=None):
         return None
 
     return card_info
+
+
+# Function to identify all leeches in a specific deck
+def find_leeches(deck_name):
+    leech_card_ids = invoke("findCards", query=f'deck:"{deck_name}" is:leech')
+    return leech_card_ids or []

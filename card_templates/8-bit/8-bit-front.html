@@ -1,0 +1,50 @@
+<section
+  class="medium-green unifont-medium ml-auto mr-auto pa3 flex flex-column h-100 w-100"
+>
+  <section
+    class="bg-mid-gray pa4 pv3 br4 measure-wide w-100 h-100 overflow-hidden mr-auto ml-auto"
+  >
+    <section
+      class="pa3 bg-light-green br4 h-100 overflow-y-scroll invisible-scrollbar w-100"
+    >
+      <!---->
+      <p class="ma0 dib mr-auto lh-audio append-play-btn-text grow-custom">
+        {{audio}}
+      </p>
+      <!-- PROMPT -->
+      <p class="ma0 f3 lh-title dark-green">
+        What is the meaning of what is being said?
+      </p>
+      <!---->
+      <!-- INPUT BLOCK START -->
+      <div id="input-container" class="pt2" placeholder="Type your answer here">
+        {{type:term}}
+      </div>
+      <!---->
+      <!-- HINT BLOCK START -->
+      <div class="hint-block lh-title pv2">
+        <a
+          class="hint link underline dark-green f3"
+          href="#"
+          onclick="this.style.display='none';document.getElementById('hint4753594160').style.display='inline-block';return false;"
+        >
+          Click here for a hint</a
+        >
+        <div
+          id="hint4753594160"
+          class="hint medium-green f3"
+          style="display: none"
+        >
+          {{Tags}}
+        </div>
+      </div>
+      <!---->
+    </section>
+  </section>
+</section>
+<!-- DON'T TOUCH BELOW THIS LINE PLEASE THANK YOU. The following img tag will configure Anki's built-in text input placeholder -->
+<img
+  class="dn"
+  src
+  onerror="document.getElementById('typeans').placeholder=document.getElementById('input-container').getAttribute('placeholder'); document.getElementById('typeans').value=''; document.getElementById('typeans').removeAttribute('readonly');"
+/>

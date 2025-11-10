@@ -64,6 +64,11 @@ If a word that the user adds is already in the deck, info on that card should me
 
 #### All Purpose Card - glyph
 
+Some cool templates:
+
+- https://avidrucker.github.io/anki-card-test-1/
+-
+
 | Fields         | Sample Value Chinese   | Sample Value Japanese               | Notes                                      |
 | -------------- | ---------------------- | ----------------------------------- | ------------------------------------------ |
 | frequency      | 234                    | 387                                 |                                            |

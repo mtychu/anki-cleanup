@@ -1,0 +1,77 @@
+---
+# Canonical 'glyph' card schema used as the project's canonical format.
+# Edit this file to add/remove canonical fields, mark required fields, and
+# provide sample values that are useful for mapping suggestions and tests.
+
+model: glyph
+description: |
+  Canonical schema for the 'glyph' note type. Fields are listed in preferred
+  canonical names; per-deck mappings map model-specific field names to these.
+
+fields:
+  - name: frequency
+    required: false
+    sample: 234
+    notes: "Optional frequency rank"
+
+  - name: vocab
+    required: true
+    sample: "離職"
+    notes: "Surface form / main lemma"
+
+  - name: vocab_reading
+    required: false
+    sample: "lízhí"
+
+  - name: definition
+    required: false
+    sample: "resign"
+
+  - name: part_of_speech
+    required: false
+    sample: "verb"
+
+  - name: vocab_ruby
+    required: false
+    sample: "離職[lízhí]"
+
+  - name: example
+    required: false
+    sample: "我朋友都慢慢開始離職了"
+    notes: "Example sentence; if multiple sentences are present they should be split"
+
+  - name: vocab_audio
+    required: false
+    sample: "[sound:387V.opus]"
+
+  - name: example_audio
+    required: false
+    sample: "[sound:387S.opus]"
+
+  - name: note_short
+    required: false
+    sample: "synonyms?"
+
+  - name: note_full
+    required: false
+    sample: "AI/Human Note"
+
+  - name: cloze_before
+    required: false
+    sample: "我朋友都慢慢開始"
+
+  - name: cloze_inside
+    required: false
+    sample: "離職"
+
+  - name: cloze_after
+    required: false
+    sample: "了"
+
+  - name: context
+    required: false
+    sample: "lesson/core10k"
+
+  - name: tags
+    required: false
+    sample: []

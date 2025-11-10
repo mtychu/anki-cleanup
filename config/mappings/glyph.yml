@@ -1,0 +1,28 @@
+---
+# Starter mapping for the 'glyph' model. This file maps the model's field
+# names (left) to the canonical field names (right) defined in
+# `config/canonical_schema.yml`.
+
+model_name: glyph
+field_mapping:
+  # Example: if your model's field is literally named "Vocab",
+  # map it to the canonical "vocab" field.
+  frequency: frequency
+  vocab: vocab
+  vocab_reading: vocab_reading
+  definition: definition
+  part_of_speech: part_of_speech
+  vocab_ruby: vocab_ruby
+  example: example
+  vocab_audio: vocab_audio
+  example_audio: example_audio
+  note_short: note_short
+  note_full: note_full
+  cloze_before: cloze_before
+  cloze_inside: cloze_inside
+  cloze_after: cloze_after
+  context: context
+  tags: tags
+# If your model uses different field names, edit the left-hand keys to match
+# your actual model field names. The CLI mapping tool will assist with
+# generating or adjusting this file.

@@ -8,6 +8,18 @@ Given a word and language, automatically fetch example sentences and audio files
 
 - if I can understand the sentences, then add them into the deck, otherwise regenerate.
 
+### Quick note — my current manual workflow (to add to the README)
+
+I currently have a lot of Chinese words that I add one by one into my Anki deck. I usually look up a definition, use AI to fetch some notes about it and an example sentence, and then one-by-one copy and paste it into my Anki cards. It's faster than 100% manual but still not ideal. The plan here is to automate part of this: write a function that uses OpenAI to fetch one example sentence and a concise definition given a `vocab` and a `language` input. This should work for any language but focus on Chinese and Japanese first. The implementation will live in `anki_utils/openai_client.py` and will use the project's AsyncOpenAI client.
+
+Authentication note: the OpenAI client (`AsyncOpenAI`) reads authentication from the environment using the standard `OPENAI_API_KEY` environment variable (or other methods supported by the SDK). If you don't see a key set, set it like:
+
+```bash
+export OPENAI_API_KEY="sk-..."
+```
+
+Keep your API key secret. The repo does not store the key.
+
 ## Card Merge
 
 When adding new decks, you will often already have a lot of cards you already know. This script will scan the new cards, and transfer progress from words you already know to the new deck (or alternatively keep the old cards). This will retain all of your progress and history.

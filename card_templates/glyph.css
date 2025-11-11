@@ -1,0 +1,48 @@
+@font-face {
+  font-family: textbook;
+  src: url("_KleeOne-Regular.ttf");
+}
+
+@font-face {
+  font-family: "localnoto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("_NotoSansJP-Medium.otf") format("opentype");
+}
+
+.card {
+  font-family: "localnoto", "notosans", "ヒラギノ明朝 ProN",
+    "Hiragino Mincho Pro", "serif";
+  font-size: 25px;
+  text-align: center;
+  color: White;
+  background-color: #303030;
+}
+
+div {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* hide the checkbox */
+
+#check {
+  display: none;
+}
+
+/* when checkbox is active, show for furigana */
+#check + label ruby rt {
+  visibility: visible;
+}
+
+/* furigana hidden by default*/
+ruby rt {
+  visibility: hidden;
+}
+
+.japanese {
+  font-family: "textbook";
+}
+.mobile {
+  font-family: textbook, "Hiragino Mincho Pro", "serif";
+}

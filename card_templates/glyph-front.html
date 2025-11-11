@@ -1,9 +1,14 @@
-<div class="japanese" style="font-size: 59px">{{vocab}}</div>
+<div class="card">
+  <div class="tags meta-tags">
+    <span class="pill index-pill">#{{index}}</span>
+    <span class="pill pos-pill">{{part_of_speech}}</span>
+    <div class="tag-list">{{Tags}}</div>
+  </div>
+  <div lang="ja" class="japanese vocab-large">{{vocab}}</div>
 
-<div style="font-size: 16px">{{part_of_speech}}</div>
+  <div class="spacer"></div>
 
-<br /><br /><br /><br /><br />
-
-<div id="example-sentence" class="japanese" style="font-size: 40px">
-  {{furigana:example_sentence}}
+  <div lang="ja" class="japanese vocab-medium example-sentence">
+    {{furigana:example_sentence}}
+  </div>
 </div>

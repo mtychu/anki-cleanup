@@ -19,6 +19,16 @@
   background-color: #303030;
 }
 
+/* make the card container responsive and prevent overflow */
+.card {
+  box-sizing: border-box;
+  padding: 12px;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 div {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -30,19 +40,285 @@ div {
   display: none;
 }
 
-/* when checkbox is active, show for furigana */
-#check + label ruby rt {
-  visibility: visible;
+/* hide the translation toggle checkbox visually (label will act as button) */
+#reveal_trans {
+  display: none;
 }
 
-/* furigana hidden by default*/
+/* ruby / furigana styling: visible by default and sized small */
+ruby {
+  ruby-position: over;
+}
+
 ruby rt {
-  visibility: hidden;
+  font-size: 0.45em;
+  /* small furigana */
+  line-height: 1;
+  vertical-align: top;
+  padding-left: 0.06em;
+  padding-right: 0.06em;
+}
+
+/* some renderers include rp; hide it so ruby looks clean */
+ruby rp {
+  display: none;
+}
+
+/* ensure long base text doesn't overflow the line when ruby is present */
+ruby,
+ruby rb,
+ruby rt {
+  white-space: nowrap;
 }
 
 .japanese {
-  font-family: "textbook";
+  font-family: "textbook", "localnoto", "Hiragino Mincho Pro", serif;
 }
+
 .mobile {
   font-family: textbook, "Hiragino Mincho Pro", "serif";
+}
+
+/* ensure definition/translation/note/audio use the same CJK font stack */
+.definition,
+.translation,
+.note,
+.audio,
+.pos {
+  font-family: "textbook", "localnoto", "Hiragino Mincho Pro", serif;
+}
+
+/* text size utility classes */
+.vocab-large {
+  font-size: 54px;
+}
+
+.vocab-medium {
+  font-size: 32px;
+}
+
+.pos {
+  font-size: 16px;
+}
+
+.audio {
+  font-size: 12px;
+}
+
+.definition {
+  font-size: 16px;
+}
+
+.translation {
+  font-size: 16px;
+}
+
+.note {
+  font-size: 14px;
+}
+
+.spacer {
+  height: 18px;
+}
+
+/* Example-sentence container: keep sentences constrained and readable */
+.example-sentence {
+  max-width: 92%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* Mobile responsiveness: scale down large vocab size on small viewports */
+@media (max-width: 420px) {
+  .vocab-large {
+    font-size: 36px;
+  }
+
+  .vocab-medium {
+    font-size: 26px;
+  }
+
+  .definition {
+    font-size: 16px;
+  }
+
+  .translation,
+  .note {
+    font-size: 12px;
+  }
+}
+
+/* Prevent extremely long unbroken strings stretching layout */
+* {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  word-break: break-word;
+  -ms-word-break: break-word;
+}
+
+/* hide elements until the card is hovered or focused (useful for source language/translation) */
+.reveal-button {
+  display: inline-block;
+  margin: 6px 8px;
+  padding: 6px 10px;
+  background: #444;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* reveal-on-toggle works with the checkbox: when checked, show the content */
+.reveal-on-toggle {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.18s ease, max-height 0.18s ease;
+}
+
+/* checkbox must appear before the toggled content; we use the general sibling selector */
+#reveal_trans:checked~.reveal-on-toggle {
+  opacity: 1;
+  max-height: 400px;
+}
+
+/* Debug details styling */
+.debug {
+  margin-top: 8px;
+  text-align: left;
+  font-size: 12px;
+  color: #ddd;
+}
+
+.debug pre {
+  background: #222;
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+/* Notes styling: tighter paragraph spacing and card-backed full-note section */
+.note {
+  text-align: left;
+  margin: 6px auto;
+  max-width: 92%;
+}
+
+.note p {
+  margin: 0 0 6px 0;
+  line-height: 1.35;
+}
+
+/* Short note shares visual style but is shown inline */
+.note-short {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+}
+
+/* Full note lives inside a details block styled like a small card back */
+.note-details {
+  margin-top: 8px;
+}
+
+.note-summary {
+  cursor: pointer;
+  display: inline-block;
+  background: #444;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.note-full {
+  margin-top: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+/* badges for sections (audio, example, definition, tags) */
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 2px 8px;
+  margin-right: 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tags {
+  font-size: 12px;
+  color: #ddd;
+}
+
+/* style tag text (if the tag string contains spaces, it will wrap) */
+.tags {
+  background: rgba(255, 255, 255, 0.01);
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+/* reduce vertical padding when tags appear in the compact meta area */
+.meta .tags,
+.meta-tags {
+  padding: 0 4px;
+  /* reduce vertical padding */
+  margin-left: 4px;
+  margin-bottom: 0;
+  align-items: center;
+  display: flex;
+}
+
+/* pills (index, pos) share similar appearance */
+.pill {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  padding: 4px 8px;
+  margin: 0 4px 4px 0;
+  /* reduce horizontal gap between pills */
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.index-pill {
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.pos-pill {
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* individual tag pills created from the Tags field */
+.tag-list {
+  display: inline-flex;
+  gap: 4px;
+  /* tighten spacing between tag pills */
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tag-pill {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 3px 6px;
+  /* slightly narrower pills */
+  border-radius: 999px;
+  font-size: 12px;
 }

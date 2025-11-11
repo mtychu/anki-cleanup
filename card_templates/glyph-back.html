@@ -1,14 +1,63 @@
-<div>{{vocab_audio}}{{example_audio}}</div>
-<input type="checkbox" id="check"/>
-<label for="check"><div class="japanese" id=answer style="font-size:59px;">{{furigana:vocab}}</div>
+<div class="card">
+    <div class="meta">
 
-<div style="font-size: 14px; ">{{part_of_speech}}</div>
-<hr>
-<div style="font-size: 20px; ">{{target_language_definition}}</div>
-<div style="font-size: 20px; ">{{source_language_definition}}</div>
+        <div class="tags meta-tags"> <span class="pill index-pill">#{{index}}</span>
+            <span class="pill pos-pill">{{part_of_speech}}</span>
+            <div class="tag-list">{{Tags}}</div>
+        </div>
+    </div>
+    <input type="checkbox" id="check" />
+    <label for="check">
+        <div lang="ja" class="japanese vocab-large" id="answer">
+            {{furigana:vocab_ruby}}
+        </div>
+        <div class="audio"><span class="badge">Audio</span>{{vocab_audio}}{{example_audio}}</div>
 
-</br>
+        <!-- Reveal translations/source definitions with a toggle button (works on mobile) -->
+        <input type="checkbox" id="reveal_trans" />
+        <label for="reveal_trans" class="reveal-button">Show translation</label>
 
-<div class="japanese" style="font-size: 40px; ">{{furigana:example_sentence}}</div>
-<div style="font-size: 14px; ">{{example_sentence_translation}}</div>
-<div style="font-size: 14px; ">{{note_full}}</div>
+        <div class="definition">{{target_language_definition}}</div>
+        <div class="definition reveal-on-toggle">{{source_language_definition}}</div>
+
+        <br />
+
+        <div lang="ja" class="japanese vocab-medium example-sentence">
+            {{furigana:example_sentence}}
+        </div>
+        <div class="translation reveal-on-toggle">{{example_sentence_translation}}</div>
+        <!-- show short note inline with same styling as the full note (not expandable) -->
+        <div class="note note-short">{{note_short}}</div>
+
+        <!-- expandable full note (card-backed section) -->
+        <details class="note-details">
+            <summary class="note-summary">Show full note</summary>
+            <div class="note note-full">{{note_full}}</div>
+        </details>
+</div>
+<script>
+    // turn the space-separated Tags string into individual tag pills
+    document.addEventListener('DOMContentLoaded', function () {
+        try {
+            var lists = document.querySelectorAll('.tag-list');
+            lists.forEach(function (el) {
+                var txt = el.textContent || '';
+                // Trim and split on whitespace
+                var parts = txt.trim().split(/\s+/).filter(function (s) { return s.length > 0; });
+                // clear original content
+                el.textContent = '';
+                parts.forEach(function (tag) {
+                    var span = document.createElement('span');
+                    span.className = 'tag-pill';
+                    span.textContent = tag;
+                    el.appendChild(span);
+                });
+            });
+        } catch (e) {
+            // fail silently
+            console.log('tag-pill init error', e);
+        }
+    });
+</script>
+
+</div>

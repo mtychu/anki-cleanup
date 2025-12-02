@@ -89,5 +89,5 @@ async def tts_demo() -> None:
 
 
 if __name__ == "__main__":
-    # Simple demo: run the TTS demo and then an example fetch if an API key is set.
     asyncio.run(tts_demo())
+    # Simple demo: run the TTS demo and then an example fetch if an API key is set.

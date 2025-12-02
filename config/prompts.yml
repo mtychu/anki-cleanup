@@ -1,0 +1,185 @@
+system:
+  content: >
+    You are a helpful assistant that creates example sentences and translations
+    for vocabulary in many languages. Keep examples natural and idiomatic. Return
+    content in strict JSON when asked, and follow the output schema.
+
+fields:
+  definition:
+    description: "Translation for the provided sentence into the requested language."
+    content: |
+      Translation into {translation_language} of the sentence (in {target_language}): "{example}".
+    return_keys: [translation]
+  example_setence:
+    description: "Example sentence plus a translation."
+    content: >
+      One example sentence in {target_language} using "{vocab}" along with a translation in
+      {source_language}.
+    return_keys: [example, translation, note]
+
+  frequency_rank:
+    description: "Numeric frequency rank of the vocabulary in the language (lower is more common)."
+    content: |
+      Integer frequency rank for "{vocab}" in {target_language} (1 = highest frequency). If unavailable, the value should be "unknown". Return JSON {"frequency": <int or "unknown">}.
+    return_keys: [frequency]
+
+  vocab_reading:
+    description: "Phonetic reading for the vocabulary (pinyin/kana as appropriate)."
+    content: |
+      Phonetic reading for "{vocab}" in {target_language}. Chinese: pinyin with tone marks; Japanese: kana. Return JSON {"reading": "..."}.
+    return_keys: [reading]
+
+  part_of_speech:
+    description: "Short part-of-speech tag for the vocabulary (noun/verb/etc.)."
+    content: |
+      Short part-of-speech label for "{vocab}" in {target_language}: e.g., "noun", "verb", "adjective", "adverb", "pronoun", "particle", or "other". Return JSON {"pos": "..."}.
+    return_keys: [pos]
+
+  vocab_ruby:
+    description: "A base and reading pair for ruby display (surface and phonetic reading)."
+    content: |
+      JSON with {"base": "...", "reading": "..."}, where base is the surface form and reading is the phonetic reading appropriate to the language (e.g., かんじ, jízhěn).
+    return_keys: [base, reading]
+
+  definition_short:
+    description: "Short one-line definition or gloss of the vocabulary in translation language."
+    content: |
+      Short one-line definition for "{vocab}" in {target_language} summarized in {translation_language}. Return JSON {"definition": "..."}.
+    return_keys: [definition]
+
+  example_sentence:
+    description: "Example sentence using the vocabulary (no translation)."
+    content: |
+      Exactly one natural example sentence using "{vocab}" in {target_language}. Return JSON {"example": "..."}.
+    return_keys: [example]
+
+  example_translation:
+    description: "Translation for the provided example sentence into the requested language."
+    content: |
+      Translation into {translation_language} for the sentence (in {target_language}): "{example}". Return JSON {"translation": "..."}.
+    return_keys: [translation]
+
+  audio_text:
+    description: "Text suitable for TTS playback (short, pronounceable)."
+    content: |
+      Short TTS-friendly text for {vocab} or short example sentence suitable for playback. Return JSON {"tts_text": "..."}.
+    return_keys: [tts_text]
+
+  tags_suggestions:
+    description: "Suggested tags for the vocabulary as concise identifiers."
+    content: |
+      Succinct tag identifiers for "{vocab}" relevant to context and usage (lowercase, hyphen-separated). Return JSON {"tags": ["...", "..."]}.
+    return_keys: [tags]
+
+  cloze_split:
+    description: "Cloze split of an example: before, inside (target), and after"
+    content: |
+      From example "{example}", return JSON {"before": "...", "inside": "...", "after": "..."} representing the left context, the cloze token, and the right context.
+    return_keys: [before, inside, after]
+
+  note_short:
+    description: "Short one-line note: synonyms, brief usage hints, or register notes."
+    content: |
+      Short usage hint or synonyms for "{vocab}" in {target_language}, one concise line. Return JSON {"note_short": "..."}.
+    return_keys: [note_short]
+
+  note_full:
+    description: "Longer explanatory note with examples, collocations, or usage nuance."
+    content: |
+      An explanatory note for "{vocab}" covering usage, synonyms, collocations, register, and gotchas (1-3 short paragraphs). Return JSON {"note_full": "..."}.
+    return_keys: [note_full]
+
+parts:
+  vocab_ruby:
+    content: |
+      Provide a JSON object with {"base": "...", "reading": "..."} where base is the surface form (e.g., 漢字) and reading is the phonetic reading appropriate to the language (e.g., かんじ or pinyin with tone marks). Use the provided {vocab} if needed.
+    return_keys: [base, reading]
+
+  vocab_reading:
+    content: |
+      Return the reading for the vocabulary "{vocab}" in {target_language}. For Chinese, return pinyin with tone marks (e.g., jízhěn). For Japanese, return kana (hiragana/katakana). Return JSON {"reading": "..."}.
+    return_keys: [reading]
+
+  part_of_speech:
+    content: |
+      Identify the part-of-speech for "{vocab}" in {target_language}. Return a short label such as "noun", "verb", "adjective", "adverb", "pronoun", "particle", or "other". Return JSON {"pos": "verb"}.
+    return_keys: [pos]
+
+  frequency_rank:
+    content: |
+      Provide a single integer frequency rank for the vocabulary "{vocab}" in {target_language} (1 = highest frequency). If the word is not found in common frequency lists, return the string "unknown". Return strict JSON {"frequency": <int or "unknown">}.
+    return_keys: [frequency]
+
+  example_sentence:
+    content: |
+      Provide exactly one natural example sentence that uses '{vocab}' in {target_language}. Keep the sentence to a single natural sentence and return JSON {"example": "..."}.
+    return_keys: [example]
+
+  example_translation:
+    content: |
+      Translate the given sentence in {target_language}: "{example}" into {translation_language}. Return JSON {"translation": "..."}.
+    return_keys: [translation]
+
+  definition_short:
+    content: |
+      Provide a concise definition for "{vocab}" in {target_language} in {translation_language} (short one-line glossary). Return JSON {"definition": "..."}.
+    return_keys: [definition]
+
+  tags_suggestions:
+    content: |
+      Suggest short tag identifiers (lowercase, hyphen-separated) for the vocabulary "{vocab}" given its meaning and context in {target_language}. Make them concise, e.g. core10k, jlpt-n3, kanji, grammar-particle. Return JSON {"tags": ["...", "..."]}.
+    return_keys: [tags]
+
+  cloze_split:
+    content: |
+      Given the example sentence "{example}", find the minimal left-hand context, the cloze target (the shortest token representing the vocabulary), and the right-hand context. Return JSON {"before": "...", "inside": "...", "after": "..."}.
+    return_keys: [before, inside, after]
+
+  note_short:
+    content: |
+      Provide a short usage hint, example synonyms, or register notes for "{vocab}" in {target_language}. Keep it one line and concise. Return JSON {"note_short": "..."}.
+    return_keys: [note_short]
+
+  note_full:
+    content: |
+      Provide a longer, human-friendly note explaining when to use "{vocab}", synonyms, register, collocations, and any gotchas. Keep it between 1-3 short paragraphs. Return JSON {"note_full": "..."}.
+    return_keys: [note_full]
+
+  audio_text:
+    content: |
+      Return a short single-sentence string designed for Text-to-Speech use that pronounces the vocabulary naturally: "{vocab}". If you would prefer to provide an example sentence to be voiced, include it as "tts_text". Return JSON {"tts_text": "..."}.
+    return_keys: [tts_text]
+
+composites:
+  example_and_translation:
+    parts: [example_sentence, example_translation]
+
+  core_card_fields:
+    parts:
+      [
+        vocab_ruby,
+        vocab_reading,
+        part_of_speech,
+        frequency_rank,
+        definition_short,
+        example_sentence,
+        example_translation,
+        tags_suggestions,
+      ]
+
+  full_card_export:
+    parts:
+      [
+        vocab_ruby,
+        vocab_reading,
+        part_of_speech,
+        frequency_rank,
+        definition_short,
+        example_sentence,
+        example_translation,
+        tags_suggestions,
+        cloze_split,
+        note_short,
+        note_full,
+        audio_text,
+      ]

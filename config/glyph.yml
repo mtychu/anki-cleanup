@@ -5,7 +5,7 @@
 
 model: glyph
 description: |
-  Canonical schema for the 'glyph' note type. Fields are listed in preferred
+  Schema for the 'glyph' note type. Fields are listed in preferred
   canonical names; per-deck mappings map model-specific field names to these.
 
 fields:

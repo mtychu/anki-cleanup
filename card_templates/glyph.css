@@ -22,9 +22,11 @@
 /* make the card container responsive and prevent overflow */
 .card {
   box-sizing: border-box;
-  padding: 12px;
-  max-width: 100%;
-  margin: 0 auto;
+  padding: 10px 12px;
+  /* constrain card width on desktop while remaining fluid on small screens */
+  width: min(6800px, 96%);
+  max-width: 680px;
+  margin: 12px auto;
   overflow-wrap: break-word;
   word-break: break-word;
 }

@@ -5,34 +5,49 @@ system:
     content in strict JSON when asked, and follow the output schema.
 
 fields:
-  definition:
-    description: "Translation for the provided sentence into the requested language."
+  # MVP FIELD
+  target_language_definition:
+    description: "Translation for the provided vocab into the target language."
     content: |
-      Translation into {translation_language} of the sentence (in {target_language}): "{example}".
-    return_keys: [translation]
+      Translation of "vocab" in of {target_language}.
+    return_keys: [target_language_definition]
+
+  # MVP FIELD
+  source_language_definition:
+    description: "Translation for the provided vocab into the source language."
+    content: |
+      Translation of "vocab" in {source_language}.
+    return_keys: [source_language_definition]
+
+  # MVP FIELD
   example_setence:
     description: "Example sentence plus a translation."
     content: >
       One example sentence in {target_language} using "{vocab}" along with a translation in
       {source_language}.
-    return_keys: [example, translation, note]
+    return_keys: [example_sentence, example_sentence_translation, note]
 
-  frequency_rank:
-    description: "Numeric frequency rank of the vocabulary in the language (lower is more common)."
-    content: |
-      Integer frequency rank for "{vocab}" in {target_language} (1 = highest frequency). If unavailable, the value should be "unknown". Return JSON {"frequency": <int or "unknown">}.
-    return_keys: [frequency]
-
+  # MVP FIELD
   vocab_reading:
     description: "Phonetic reading for the vocabulary (pinyin/kana as appropriate)."
     content: |
-      Phonetic reading for "{vocab}" in {target_language}. Chinese: pinyin with tone marks; Japanese: kana. Return JSON {"reading": "..."}.
+      Phonetic reading for "{vocab}" in {target_language}. Use the standard in {target_language}.
+      For example, for Chinese use pinyin and zhuyin; Japanese use kana.
     return_keys: [reading]
 
+  frequency_rank:
+    description: "Numeric frequency rank of the vocabulary in the language (lower is more common)."
+    content: >
+      Integer frequency rank for "{vocab}" in {target_language} (1 = most frequent).
+      If unavailable, the value should be -1.
+    return_keys: [frequency]
+
+  # MVP FIELD
   part_of_speech:
     description: "Short part-of-speech tag for the vocabulary (noun/verb/etc.)."
     content: |
-      Short part-of-speech label for "{vocab}" in {target_language}: e.g., "noun", "verb", "adjective", "adverb", "pronoun", "particle", or "other". Return JSON {"pos": "..."}.
+      Short part-of-speech label for "{vocab}" in {target_language}: e.g., "noun", "verb", 
+      "adjective", "adverb", "pronoun", "particle", or "other". Return JSON {"pos": "..."}.
     return_keys: [pos]
 
   vocab_ruby:
@@ -77,12 +92,14 @@ fields:
       From example "{example}", return JSON {"before": "...", "inside": "...", "after": "..."} representing the left context, the cloze token, and the right context.
     return_keys: [before, inside, after]
 
+  # MVP FIELD
   note_short:
     description: "Short one-line note: synonyms, brief usage hints, or register notes."
     content: |
       Short usage hint or synonyms for "{vocab}" in {target_language}, one concise line. Return JSON {"note_short": "..."}.
     return_keys: [note_short]
 
+  # MVP FIELD
   note_full:
     description: "Longer explanatory note with examples, collocations, or usage nuance."
     content: |

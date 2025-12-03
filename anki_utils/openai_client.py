@@ -1,15 +1,31 @@
 import asyncio
 import json
 from typing import Dict, Iterable, Optional
+from pydantic import BaseModel
+import yaml
 
 from openai import AsyncOpenAI
 from openai.helpers import LocalAudioPlayer
 
 openai = AsyncOpenAI()
 
+# Load configuration from YAML
+with open("config/openai_config.yaml", "r", encoding="utf8") as f:
+    config = yaml.safe_load(f)
 
-async def fetch_example_and_definition(
-    vocab: str,
+# Fields from YAML
+fields = config["fields"]
+
+
+class Glyph(BaseModel):
+    vocab: str
+    target_language_definition: str
+    source_language_definition: str
+    example_sentence: Optional[str] = None
+    translation: Optional[str] = None
+
+
+async def fetch_fields(
     target_language: str = "Chinese",
     translation_language: str = "English",
     model: str = "gpt-4o-mini",
@@ -23,6 +39,11 @@ async def fetch_example_and_definition(
     the keys "example" and "translation". Non-JSON responses are rejected to
     keep parsing predictable.
     """
+
+    for name, details in fields.items():
+        if details.get("mvp"):
+            print(f"MVP field: {name}")
+            print(f"Description: {details['description']}")
 
     prompt = (
         f"Provide exactly one natural example sentence that uses the word '{vocab}' "
@@ -44,31 +65,6 @@ async def fetch_example_and_definition(
         print(f"OpenAI request failed: {e}")
         return None
 
-    # The SDK returns a structure with choices -> message -> content
-    try:
-        content = resp.choices[0].message.content
-    except Exception:
-        # Fallback: try to stringify the whole response
-        content = str(resp)
-
-    # Parse the assistant content strictly as JSON. If parsing fails, return None.
-    try:
-        parsed = json.loads(content)
-    except Exception:
-        # Non-JSON responses are rejected for now to keep parsing simple.
-        return None
-
-    if not isinstance(parsed, dict):
-        return None
-
-    # Validate required keys
-    required_keys = ["example", "translation"]
-
-    missing = [k for k in required_keys if k not in parsed or not parsed.get(k)]
-    if missing:
-        # missing required keys -> reject
-        return None
-
     return {
         "example": parsed.get("example"),
         "translation": parsed.get("translation"),
@@ -76,7 +72,7 @@ async def fetch_example_and_definition(
     }
 
 
-async def tts_demo() -> None:
+async def open_ai_tts() -> None:
     """Small demo that plays a short sentence using the TTS helper in the SDK."""
     async with openai.audio.speech.with_streaming_response.create(
         model="gpt-4o-mini-tts",
@@ -89,5 +85,5 @@ async def tts_demo() -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(tts_demo())
+    asyncio.run(open_ai_tts())
     # Simple demo: run the TTS demo and then an example fetch if an API key is set.

@@ -11,3 +11,7 @@ def card_info(card_id, deck_name=None):
         raise ValueError("Card ID must be an integer.")
 
     card_info = invoke("cardsInfo", cards=[card_id])
+
+
+if __name__ == "__main__":
+    card_info(1626895233)

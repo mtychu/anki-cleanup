@@ -1,89 +1,78 @@
 import asyncio
-import json
 from typing import Dict, Iterable, Optional
 from pydantic import BaseModel
-import yaml
 
-from openai import AsyncOpenAI
+from openai import OpenAI, AsyncOpenAI
 from openai.helpers import LocalAudioPlayer
 
 openai = AsyncOpenAI()
 
-# Load configuration from YAML
-with open("config/openai_config.yaml", "r", encoding="utf8") as f:
-    config = yaml.safe_load(f)
 
-# Fields from YAML
-fields = config["fields"]
+class ExampleSentence(BaseModel):
+    target_language_sentence: str
+    source_language_translation: str
 
 
+# Sample BaseModel - TODO make the requested data dynamic
 class Glyph(BaseModel):
     vocab: str
     target_language_definition: str
     source_language_definition: str
-    example_sentence: Optional[str] = None
-    translation: Optional[str] = None
+    example_sentences: list[ExampleSentence]
 
 
-async def fetch_fields(
-    target_language: str = "Chinese",
-    translation_language: str = "English",
-    model: str = "gpt-4o-mini",
-    max_tokens: int = 200,
-    temperature: float = 0.2,
-) -> Optional[Dict[str, str]]:
-    """Fetch one example sentence in `language` for `vocab` and its translation.
+client = OpenAI()
 
-    Returns a dict: {"example": str, "translation": str, "raw": str} on
-    success, or None on failure. The assistant MUST return strict JSON with
-    the keys "example" and "translation". Non-JSON responses are rejected to
-    keep parsing predictable.
-    """
+# TODO: get data from dictionaries as well as AI.
+# https://platform.openai.com/docs/guides/structured-outputs
 
-    for name, details in fields.items():
-        if details.get("mvp"):
-            print(f"MVP field: {name}")
-            print(f"Description: {details['description']}")
 
-    prompt = (
-        f"Provide exactly one natural example sentence that uses the word '{vocab}' "
-        f"in {target_language}. Also provide a concise translation of that example into "
-        f'{translation_language}. Return valid JSON with two keys: "example" '
-        f'(the example in {target_language}) and "translation" (the translation in '
-        f"{translation_language}). The example must be exactly one sentence."
+def fetch_ai_vocab_data(
+    vocab: str, target_language: str, source_language: str, example_count: int = 2
+) -> Glyph:
+
+    # OpenAI call for fetching AI vocab data
+    response = client.responses.parse(
+        model="gpt-5-nano-2025-08-07",
+        input=[
+            {
+                "role": "system",
+                "content": f"""You are a {target_language} language learning assistant.
+                The student speaks {source_language}. Only the required structured
+                output.""",
+            },
+            {
+                "role": "user",
+                "content": f"""
+                For "{vocab}" in {target_language}, please return the following:
+                - definition in {target_language}, key: target_language_definition
+                - equivalent word(s) in {source_language}, key: source_language_definition
+                - {example_count} example sentence(s) using "{vocab}", key: example_sentences
+                  Each example sentence should have:
+                  - the sentence in {target_language}, key: target_language_sentence
+                  - the translation in {source_language}, key: source_language_translation""",
+            },
+        ],
+        text_format=Glyph,
     )
 
-    try:
-        resp = await openai.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=max_tokens,
-            temperature=temperature,
-        )
-    except Exception as e:
-        # Let the caller decide how to handle connectivity/auth errors
-        print(f"OpenAI request failed: {e}")
-        return None
-
-    return {
-        "example": parsed.get("example"),
-        "translation": parsed.get("translation"),
-        "raw": content,
-    }
+    event = response.output_parsed
+    print(event)
+    return event
 
 
-async def open_ai_tts() -> None:
-    """Small demo that plays a short sentence using the TTS helper in the SDK."""
-    async with openai.audio.speech.with_streaming_response.create(
-        model="gpt-4o-mini-tts",
-        voice="nova",
-        input="彼女は背の高い男性を好みますね。",
-        instructions="use a neutral tone",
-        response_format="pcm",
-    ) as response:
-        await LocalAudioPlayer().play(response)
+# TODO find alternative to OpenAI - This doesn't sound good or natural
+# async def open_ai_tts() -> None:
+#     """Small demo that plays a short sentence using the TTS helper in the SDK."""
+#     async with openai.audio.speech.with_streaming_response.create(
+#         model="gpt-4o-mini-tts",
+#         voice="nova",
+#         input="彼女は背の高い男性を好みますね。",
+#         instructions="use a neutral tone",
+#         response_format="pcm",
+#     ) as response:
+#         await LocalAudioPlayer().play(response)
 
 
 if __name__ == "__main__":
-    asyncio.run(open_ai_tts())
-    # Simple demo: run the TTS demo and then an example fetch if an API key is set.
+    fetch_ai_vocab_data("鼻水", "Japanese", "English")

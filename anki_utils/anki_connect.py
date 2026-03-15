@@ -1,6 +1,5 @@
 import requests
 
-
 # Define Global Variables for Anki
 ANKI_CONNECT_URL = "http://localhost:8765"
 

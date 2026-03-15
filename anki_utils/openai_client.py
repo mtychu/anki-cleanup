@@ -14,7 +14,7 @@ class ExampleSentence(BaseModel):
 
 
 # Sample BaseModel - TODO make the requested data dynamic
-class Glyph(BaseModel):
+class GlyphChinese(BaseModel):
     vocab: str
     target_language_definition: str
     source_language_definition: str
@@ -29,7 +29,7 @@ client = OpenAI()
 
 def fetch_ai_vocab_data(
     vocab: str, target_language: str, source_language: str, example_count: int = 2
-) -> Glyph:
+) -> GlyphChinese:
 
     # OpenAI call for fetching AI vocab data
     response = client.responses.parse(
@@ -53,7 +53,7 @@ def fetch_ai_vocab_data(
                   - the translation in {source_language}, key: source_language_translation""",
             },
         ],
-        text_format=Glyph,
+        text_format=GlyphChinese,
     )
 
     event = response.output_parsed
